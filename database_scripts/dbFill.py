@@ -25,7 +25,7 @@ def usage():
 
 def getUsers(conn):
     # Retrieve the list of users
-    conn.request("GET","""/api/users?filter={"_id":1}""")
+    conn.request("GET","""/api/users?where={"_id":1}""")
     response = conn.getresponse()
     data = response.read()
     d = json.loads(data)
@@ -98,7 +98,10 @@ def main(argv):
         userEmails.append(str(d['data']['email']))
 
     # Open 'tasks.txt' for sample task names
-    f = open('tasks.txt','r')
+    import os
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    tasks_file = os.path.join(script_dir, 'tasks.txt')
+    f = open(tasks_file,'r')
     taskNames = f.read().splitlines()
 
     # Loop 'taskCount' number of times
@@ -123,30 +126,37 @@ def main(argv):
 
         taskID = str(d['data']['_id'])
 
-        # Make sure the task is added to the pending list of the user
+        # Note: The task creation should have already updated the user's pendingTasks
+        # through the API's bidirectional reference logic, so this section is optional
+        # but kept for compatibility with the original script logic
         if assigned and not completed:
             # GET the correct user
-            conn.request("GET","""/api/users?where={"_id":\""""+assignedUserID+"""\"}""")
+            conn.request("GET","""/api/users/"""+assignedUserID)
             response = conn.getresponse()
             data = response.read()
             d = json.loads(data)
 
-            # Store all the user properties
-            assignedUserName = str(d['data'][0]['name'])
-            assignedUserEmail = str(d['data'][0]['email'])
-            assignedUserDate = str(d['data'][0]['dateCreated'])
+            # Check if user was found
+            if response.status == 200 and 'data' in d:
+                # Store all the user properties
+                userData = d['data']
+                assignedUserName = str(userData['name'])
+                assignedUserEmail = str(userData['email'])
+                assignedUserDate = str(userData['dateCreated'])
 
-            # Append the new taskID to pending tasks
-            assignedUserTasks = d['data'][0]['pendingTasks']
-            assignedUserTasks = [str(x).replace('[','').replace(']','').replace("'",'').replace('"','') for x in assignedUserTasks]
-            assignedUserTasks.append(taskID)
+                # Get current pending tasks (should already include the new task)
+                assignedUserTasks = userData.get('pendingTasks', [])
+                assignedUserTasks = [str(x) for x in assignedUserTasks]
+                
+                # Ensure taskID is in pendingTasks (if not already there)
+                if taskID not in assignedUserTasks:
+                    assignedUserTasks.append(taskID)
 
-            # PUT in the user
-            params = urllib.parse.urlencode({'_id': assignedUserID, 'name': assignedUserName, 'email': assignedUserEmail, 'dateCreated': assignedUserDate, 'pendingTasks': assignedUserTasks}, True)
-            conn.request("PUT", "/api/users/"+assignedUserID, params, headers)
-            response = conn.getresponse()
-            data = response.read()
-            d = json.loads(data)
+                # PUT in the user
+                params = urllib.parse.urlencode({'name': assignedUserName, 'email': assignedUserEmail, 'dateCreated': assignedUserDate, 'pendingTasks': assignedUserTasks}, True)
+                conn.request("PUT", "/api/users/"+assignedUserID, params, headers)
+                response = conn.getresponse()
+                data = response.read()
 
     # Exit gracefully
     conn.close()

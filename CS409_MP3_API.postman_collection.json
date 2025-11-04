@@ -1,0 +1,597 @@
+{
+	"info": {
+		"_postman_id": "cs409-mp3-api-collection",
+		"name": "CS409 MP3 - Task Management API",
+		"description": "Postman collection for CS409 MP3 Task Management API\n\nBase URL: http://localhost:3000/api\n\nAll responses are in the format: { \"message\": \"...\", \"data\": ... }",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "GET - Get all users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["users"]
+						},
+						"description": "Get all users list"
+					}
+				},
+				{
+					"name": "GET - Get users with where filter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users?where={\"_id\": \"USER_ID_HERE\"}",
+							"host": ["{{baseUrl}}"],
+							"path": ["users"],
+							"query": [
+								{
+									"key": "where",
+									"value": "{\"_id\": \"USER_ID_HERE\"}",
+									"description": "JSON query condition"
+								}
+							]
+						},
+						"description": "Filter users using where parameter"
+					}
+				},
+				{
+					"name": "GET - Get users sorted by name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users?sort={\"name\": 1}",
+							"host": ["{{baseUrl}}"],
+							"path": ["users"],
+							"query": [
+								{
+									"key": "sort",
+									"value": "{\"name\": 1}",
+									"description": "1=ascending, -1=descending"
+								}
+							]
+						},
+						"description": "Get users sorted by name"
+					}
+				},
+				{
+					"name": "GET - Get users with select fields",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users?select={\"_id\": 0, \"email\": 1, \"name\": 1}",
+							"host": ["{{baseUrl}}"],
+							"path": ["users"],
+							"query": [
+								{
+									"key": "select",
+									"value": "{\"_id\": 0, \"email\": 1, \"name\": 1}",
+									"description": "1=include, 0=exclude"
+								}
+							]
+						},
+						"description": "Select specific fields"
+					}
+				},
+				{
+					"name": "GET - Get users with pagination",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users?skip=10&limit=5",
+							"host": ["{{baseUrl}}"],
+							"path": ["users"],
+							"query": [
+								{
+									"key": "skip",
+									"value": "10",
+									"description": "Skip first N records"
+								},
+								{
+									"key": "limit",
+									"value": "5",
+									"description": "Limit number of results returned"
+								}
+							]
+						},
+						"description": "Get users with pagination"
+					}
+				},
+				{
+					"name": "GET - Count users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users?count=true",
+							"host": ["{{baseUrl}}"],
+							"path": ["users"],
+							"query": [
+								{
+									"key": "count",
+									"value": "true",
+									"description": "Return count instead of data"
+								}
+							]
+						},
+						"description": "Get total user count"
+					}
+				},
+				{
+					"name": "GET - Get user by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["users", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "USER_ID_HERE",
+									"description": "User ID"
+								}
+							]
+						},
+						"description": "Get single user by ID"
+					}
+				},
+				{
+					"name": "GET - Get user by ID with select",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/:id?select={\"email\": 1, \"name\": 1}",
+							"host": ["{{baseUrl}}"],
+							"path": ["users", ":id"],
+							"query": [
+								{
+									"key": "select",
+									"value": "{\"email\": 1, \"name\": 1}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "USER_ID_HERE"
+								}
+							]
+						},
+						"description": "Get user by ID with selected fields only"
+					}
+				},
+				{
+					"name": "POST - Create new user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"pendingTasks\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["users"]
+						},
+						"description": "Create new user. name and email are required fields"
+					}
+				},
+				{
+					"name": "PUT - Update user",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe Updated\",\n    \"email\": \"john.doe@example.com\",\n    \"pendingTasks\": [\"TASK_ID_1\", \"TASK_ID_2\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["users", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "USER_ID_HERE"
+								}
+							]
+						},
+						"description": "Update user. Will sync update assignedUser and assignedUserName of related tasks"
+					}
+				},
+				{
+					"name": "DELETE - Delete user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["users", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "USER_ID_HERE"
+								}
+							]
+						},
+						"description": "Delete user. Will unassign all tasks assigned to this user"
+					}
+				}
+			]
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "GET - Get all tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks",
+							"host": ["{{baseUrl}}"],
+							"path": ["tasks"]
+						},
+						"description": "Get all tasks list (default limit=100)"
+					}
+				},
+				{
+					"name": "GET - Get completed tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks?where={\"completed\": true}",
+							"host": ["{{baseUrl}}"],
+							"path": ["tasks"],
+							"query": [
+								{
+									"key": "where",
+									"value": "{\"completed\": true}",
+									"description": "Filter completed tasks"
+								}
+							]
+						},
+						"description": "Get completed tasks"
+					}
+				},
+				{
+					"name": "GET - Get tasks by IDs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks?where={\"_id\": {\"$in\": [\"TASK_ID_1\", \"TASK_ID_2\"]}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["tasks"],
+							"query": [
+								{
+									"key": "where",
+									"value": "{\"_id\": {\"$in\": [\"TASK_ID_1\", \"TASK_ID_2\"]}}",
+									"description": "Query multiple tasks using $in operator"
+								}
+							]
+						},
+						"description": "Get tasks by multiple IDs"
+					}
+				},
+				{
+					"name": "GET - Get tasks sorted by deadline",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks?sort={\"deadline\": 1}",
+							"host": ["{{baseUrl}}"],
+							"path": ["tasks"],
+							"query": [
+								{
+									"key": "sort",
+									"value": "{\"deadline\": 1}",
+									"description": "Sort by deadline in ascending order"
+								}
+							]
+						},
+						"description": "Get tasks sorted by deadline"
+					}
+				},
+				{
+					"name": "GET - Get tasks with select fields",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks?select={\"_id\": 0, \"name\": 1, \"completed\": 1}",
+							"host": ["{{baseUrl}}"],
+							"path": ["tasks"],
+							"query": [
+								{
+									"key": "select",
+									"value": "{\"_id\": 0, \"name\": 1, \"completed\": 1}",
+									"description": "Return only name and completed fields"
+								}
+							]
+						},
+						"description": "Select specific fields"
+					}
+				},
+				{
+					"name": "GET - Get tasks with pagination",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks?skip=60&limit=20",
+							"host": ["{{baseUrl}}"],
+							"path": ["tasks"],
+							"query": [
+								{
+									"key": "skip",
+									"value": "60",
+									"description": "Skip first 60 records"
+								},
+								{
+									"key": "limit",
+									"value": "20",
+									"description": "Return 20 records"
+								}
+							]
+						},
+						"description": "Get tasks with pagination (records 61-80)"
+					}
+				},
+				{
+					"name": "GET - Count tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks?where={\"completed\": true}&count=true",
+							"host": ["{{baseUrl}}"],
+							"path": ["tasks"],
+							"query": [
+								{
+									"key": "where",
+									"value": "{\"completed\": true}"
+								},
+								{
+									"key": "count",
+									"value": "true",
+									"description": "Return count"
+								}
+							]
+						},
+						"description": "Get count of completed tasks"
+					}
+				},
+				{
+					"name": "GET - Get task by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["tasks", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "TASK_ID_HERE",
+									"description": "Task ID"
+								}
+							]
+						},
+						"description": "Get single task by ID"
+					}
+				},
+				{
+					"name": "GET - Get task by ID with select",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks/:id?select={\"name\": 1, \"completed\": 1}",
+							"host": ["{{baseUrl}}"],
+							"path": ["tasks", ":id"],
+							"query": [
+								{
+									"key": "select",
+									"value": "{\"name\": 1, \"completed\": 1}"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "TASK_ID_HERE"
+								}
+							]
+						},
+						"description": "Get task by ID with selected fields only"
+					}
+				},
+				{
+					"name": "POST - Create new task",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Complete project documentation\",\n    \"description\": \"Write comprehensive documentation for the API\",\n    \"deadline\": \"2025-11-15T00:00:00.000Z\",\n    \"completed\": false,\n    \"assignedUser\": \"USER_ID_HERE\",\n    \"assignedUserName\": \"unassigned\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tasks",
+							"host": ["{{baseUrl}}"],
+							"path": ["tasks"]
+						},
+						"description": "Create new task. name and deadline are required fields. If assignedUser is specified, will automatically update user's pendingTasks"
+					}
+				},
+				{
+					"name": "PUT - Update task",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Complete project documentation (Updated)\",\n    \"description\": \"Write comprehensive documentation for the API - Revised\",\n    \"deadline\": \"2025-11-20T00:00:00.000Z\",\n    \"completed\": true,\n    \"assignedUser\": \"USER_ID_HERE\",\n    \"assignedUserName\": \"John Doe\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tasks/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["tasks", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "TASK_ID_HERE"
+								}
+							]
+						},
+						"description": "Update task. Will sync update user's pendingTasks. If task is completed, will automatically remove from pendingTasks"
+					}
+				},
+				{
+					"name": "DELETE - Delete task",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["tasks", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "TASK_ID_HERE"
+								}
+							]
+						},
+						"description": "Delete task. Will remove this task from user's pendingTasks"
+					}
+				}
+			]
+		},
+		{
+			"name": "Complex Queries",
+			"item": [
+				{
+					"name": "GET - Users with multiple params",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users?sort={\"name\": 1}&skip=60&limit=20",
+							"host": ["{{baseUrl}}"],
+							"path": ["users"],
+							"query": [
+								{
+									"key": "sort",
+									"value": "{\"name\": 1}"
+								},
+								{
+									"key": "skip",
+									"value": "60"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "Combine multiple query parameters: sorting, pagination"
+					}
+				},
+				{
+					"name": "GET - Tasks with where and sort",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tasks?where={\"completed\": false}&sort={\"deadline\": 1}&limit=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["tasks"],
+							"query": [
+								{
+									"key": "where",
+									"value": "{\"completed\": false}",
+									"description": "Incomplete tasks"
+								},
+								{
+									"key": "sort",
+									"value": "{\"deadline\": 1}",
+									"description": "Sort by deadline in ascending order"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Get incomplete tasks, sorted by deadline, limit 10"
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000/api",
+			"type": "string"
+		}
+	]
+}
+
