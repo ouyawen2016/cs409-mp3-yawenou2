@@ -155,6 +155,10 @@ module.exports = function (router) {
         
         mongooseQuery.exec(function (err, user) {
             if (err) {
+                // Check if it's a CastError (invalid ObjectId format)
+                if (err.name === 'CastError') {
+                    return sendError(res, 404, 'Not found', { error: 'User not found' });
+                }
                 return sendError(res, 500, 'Server error', { error: 'Failed to retrieve user' });
             }
             if (!user) {
@@ -173,6 +177,10 @@ module.exports = function (router) {
         
         User.findById(req.params.id, function (err, user) {
             if (err) {
+                // Check if it's a CastError (invalid ObjectId format)
+                if (err.name === 'CastError') {
+                    return sendError(res, 404, 'Not found', { error: 'User not found' });
+                }
                 return sendError(res, 500, 'Server error', { error: 'Failed to retrieve user' });
             }
             if (!user) {
@@ -233,6 +241,10 @@ module.exports = function (router) {
     userByIdRoute.delete(function (req, res) {
         User.findById(req.params.id, function (err, user) {
             if (err) {
+                // Check if it's a CastError (invalid ObjectId format)
+                if (err.name === 'CastError') {
+                    return sendError(res, 404, 'Not found', { error: 'User not found' });
+                }
                 return sendError(res, 500, 'Server error', { error: 'Failed to retrieve user' });
             }
             if (!user) {

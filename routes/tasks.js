@@ -185,6 +185,10 @@ module.exports = function (router) {
         
         mongooseQuery.exec(function (err, task) {
             if (err) {
+                // Check if it's a CastError (invalid ObjectId format)
+                if (err.name === 'CastError') {
+                    return sendError(res, 404, 'Not found', { error: 'Task not found' });
+                }
                 return sendError(res, 500, 'Server error', { error: 'Failed to retrieve task' });
             }
             if (!task) {
@@ -203,6 +207,10 @@ module.exports = function (router) {
         
         Task.findById(req.params.id, function (err, task) {
             if (err) {
+                // Check if it's a CastError (invalid ObjectId format)
+                if (err.name === 'CastError') {
+                    return sendError(res, 404, 'Not found', { error: 'Task not found' });
+                }
                 return sendError(res, 500, 'Server error', { error: 'Failed to retrieve task' });
             }
             if (!task) {
@@ -314,6 +322,10 @@ module.exports = function (router) {
     taskByIdRoute.delete(function (req, res) {
         Task.findById(req.params.id, function (err, task) {
             if (err) {
+                // Check if it's a CastError (invalid ObjectId format)
+                if (err.name === 'CastError') {
+                    return sendError(res, 404, 'Not found', { error: 'Task not found' });
+                }
                 return sendError(res, 500, 'Server error', { error: 'Failed to retrieve task' });
             }
             if (!task) {
